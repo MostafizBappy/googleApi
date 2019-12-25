@@ -1,0 +1,552 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ReporterModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DW_Employee">
+          <Key>
+            <PropertyRef Name="employeecode" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="employeecode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="displayname" Type="varchar" MaxLength="150" />
+          <Property Name="deskcode" Type="int" />
+          <Property Name="publicationcode" Type="int" />
+          <Property Name="ldapint" Type="varchar" MaxLength="50" />
+          <Property Name="groupcode" Type="int" />
+          <Property Name="reportingdesk" Type="varchar" MaxLength="50" />
+          <Property Name="status" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ServiceName">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Service" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ServicePermission">
+          <Key>
+            <PropertyRef Name="ServiceId" />
+          </Key>
+          <Property Name="ServiceId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ServiceName" Type="varchar" MaxLength="50" />
+          <Property Name="UserId" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserCode" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="EmailAddress" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="MobileNo" Type="varchar" MaxLength="50" />
+          <Property Name="DesignationId" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="100" />
+          <Property Name="EntryBy" Type="int" />
+          <Property Name="EntryDate" Type="datetime" />
+          <Property Name="UpdateBy" Type="int" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="IsReporter" Type="int" />
+          <Property Name="GroupId" Type="int" />
+          <Property Name="Holiday" Type="varchar" MaxLength="50" />
+          <Property Name="NewswrapCode" Type="varchar" MaxLength="50" />
+          <Property Name="NewswrapDesk" Type="varchar" MaxLength="50" />
+          <Property Name="NewswrapCenter" Type="int" />
+          <Property Name="AreaId" Type="int" />
+          <Property Name="BishalGroup" Type="varchar" MaxLength="50" />
+          <Property Name="Address" Type="nvarchar" MaxLength="500" />
+          <Property Name="DistrictNameId" Type="int" />
+          <Property Name="UpazillaNameId" Type="int" />
+          <Property Name="IsMohanogor" Type="int" />
+          <Property Name="ReportGroup" Type="nvarchar" MaxLength="100" />
+          <Property Name="ReportOrder" Type="int" />
+          <Property Name="ApprovePermission" Type="int" />
+          <Property Name="SectionID" Type="int" />
+          <Property Name="IsPhotoHead" Type="bit" />
+          <Property Name="LDAPUser" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="VideoManager">
+          <Key>
+            <PropertyRef Name="VideoManagerId" />
+          </Key>
+          <Property Name="VideoManagerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="VideoSummaryId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="TakenByUserId" Type="int" />
+          <Property Name="TakenByTime" Type="datetime" />
+          <Property Name="CompletedTime" Type="datetime" />
+          <Property Name="Status" Type="varchar" MaxLength="50" />
+          <Property Name="LocalCompletedFilePath" Type="nvarchar" MaxLength="200" />
+          <Property Name="YoutubeId" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="VideoSummary">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="VideoName" Type="varchar" MaxLength="150" />
+          <Property Name="VideoPath" Type="varchar" MaxLength="550" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="CenterCode" Type="int" />
+          <Property Name="VideoDate" Type="date" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="VideoSize" Type="varchar" MaxLength="50" />
+          <Property Name="EntryDate" Type="datetime" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="GoogleDriveId" Type="nvarchar" MaxLength="50" />
+          <Property Name="GoogleStreamingLink" Type="nvarchar(max)" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Reporter.dbo.View_User' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="View_User">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="UserCode" />
+            <PropertyRef Name="FirstName" />
+            <PropertyRef Name="LastName" />
+            <PropertyRef Name="EmailAddress" />
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="DesignationId" />
+            <PropertyRef Name="FullName" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="UserCode" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="EmailAddress" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DesignationId" Type="int" Nullable="false" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="101" Nullable="false" />
+          <Property Name="IsReporter" Type="int" />
+          <Property Name="MobileNo" Type="varchar" MaxLength="50" />
+          <Property Name="NewswrapCode" Type="varchar" MaxLength="50" />
+          <Property Name="NewswrapDesk" Type="varchar" MaxLength="50" />
+          <Property Name="NewswrapCenter" Type="int" />
+          <Property Name="FullDes" Type="nvarchar" MaxLength="210" />
+          <Property Name="AreaId" Type="int" />
+          <Property Name="GroupId" Type="int" />
+          <Property Name="RoleId" Type="int" />
+          <Property Name="Holiday" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Reporter.dbo.View_VideoSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="View_VideoSummary">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="FullName" />
+          </Key>
+          <Property Name="Id" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="VideoName" Type="varchar" MaxLength="150" />
+          <Property Name="VideoPath" Type="varchar" MaxLength="550" />
+          <Property Name="UserId" Type="int" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="101" Nullable="false" />
+          <Property Name="VideoDate" Type="date" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="VideoSize" Type="varchar" MaxLength="50" />
+          <Property Name="EntryDate" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_VideoManager_VideoManager">
+          <End Role="VideoSummary" Type="Self.VideoSummary" Multiplicity="1" />
+          <End Role="VideoManager" Type="Self.VideoManager" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VideoSummary">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VideoManager">
+              <PropertyRef Name="VideoSummaryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ReporterModelStoreContainer">
+          <EntitySet Name="DW_Employee" EntityType="Self.DW_Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ServiceName" EntityType="Self.ServiceName" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ServicePermission" EntityType="Self.ServicePermission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_User" EntityType="Self.tbl_User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VideoManager" EntityType="Self.VideoManager" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VideoSummary" EntityType="Self.VideoSummary" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="View_User" EntityType="Self.View_User" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [View_User].[UserId] AS [UserId], 
+    [View_User].[UserCode] AS [UserCode], 
+    [View_User].[FirstName] AS [FirstName], 
+    [View_User].[LastName] AS [LastName], 
+    [View_User].[EmailAddress] AS [EmailAddress], 
+    [View_User].[UserName] AS [UserName], 
+    [View_User].[DesignationId] AS [DesignationId], 
+    [View_User].[FullName] AS [FullName], 
+    [View_User].[IsReporter] AS [IsReporter], 
+    [View_User].[MobileNo] AS [MobileNo], 
+    [View_User].[NewswrapCode] AS [NewswrapCode], 
+    [View_User].[NewswrapDesk] AS [NewswrapDesk], 
+    [View_User].[NewswrapCenter] AS [NewswrapCenter], 
+    [View_User].[FullDes] AS [FullDes], 
+    [View_User].[AreaId] AS [AreaId], 
+    [View_User].[GroupId] AS [GroupId], 
+    [View_User].[RoleId] AS [RoleId], 
+    [View_User].[Holiday] AS [Holiday]
+    FROM [dbo].[View_User] AS [View_User]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="View_VideoSummary" EntityType="Self.View_VideoSummary" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [View_VideoSummary].[Id] AS [Id], 
+    [View_VideoSummary].[VideoName] AS [VideoName], 
+    [View_VideoSummary].[VideoPath] AS [VideoPath], 
+    [View_VideoSummary].[UserId] AS [UserId], 
+    [View_VideoSummary].[FullName] AS [FullName], 
+    [View_VideoSummary].[VideoDate] AS [VideoDate], 
+    [View_VideoSummary].[Description] AS [Description], 
+    [View_VideoSummary].[VideoSize] AS [VideoSize], 
+    [View_VideoSummary].[EntryDate] AS [EntryDate]
+    FROM [dbo].[View_VideoSummary] AS [View_VideoSummary]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_VideoManager_VideoManager" Association="Self.FK_VideoManager_VideoManager">
+            <End Role="VideoSummary" EntitySet="VideoSummary" />
+            <End Role="VideoManager" EntitySet="VideoManager" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ReporterModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="DW_Employee">
+          <Key>
+            <PropertyRef Name="employeecode" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="employeecode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="displayname" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="deskcode" Type="Int32" />
+          <Property Name="publicationcode" Type="Int32" />
+          <Property Name="ldapint" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="groupcode" Type="Int32" />
+          <Property Name="reportingdesk" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="ServiceName">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Service" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ServicePermission">
+          <Key>
+            <PropertyRef Name="ServiceId" />
+          </Key>
+          <Property Name="ServiceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ServiceName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UserId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EmailAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MobileNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DesignationId" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EntryBy" Type="Int32" />
+          <Property Name="EntryDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdateBy" Type="Int32" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="IsReporter" Type="Int32" />
+          <Property Name="GroupId" Type="Int32" />
+          <Property Name="Holiday" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NewswrapCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NewswrapDesk" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NewswrapCenter" Type="Int32" />
+          <Property Name="AreaId" Type="Int32" />
+          <Property Name="BishalGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="DistrictNameId" Type="Int32" />
+          <Property Name="UpazillaNameId" Type="Int32" />
+          <Property Name="IsMohanogor" Type="Int32" />
+          <Property Name="ReportGroup" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ReportOrder" Type="Int32" />
+          <Property Name="ApprovePermission" Type="Int32" />
+          <Property Name="SectionID" Type="Int32" />
+          <Property Name="IsPhotoHead" Type="Boolean" />
+          <Property Name="LDAPUser" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="View_User">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="UserCode" />
+            <PropertyRef Name="FirstName" />
+            <PropertyRef Name="LastName" />
+            <PropertyRef Name="EmailAddress" />
+            <PropertyRef Name="UserName" />
+            <PropertyRef Name="DesignationId" />
+            <PropertyRef Name="FullName" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="UserCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EmailAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DesignationId" Type="Int32" Nullable="false" />
+          <Property Name="FullName" Type="String" MaxLength="101" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsReporter" Type="Int32" />
+          <Property Name="MobileNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NewswrapCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NewswrapDesk" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NewswrapCenter" Type="Int32" />
+          <Property Name="FullDes" Type="String" MaxLength="210" FixedLength="false" Unicode="true" />
+          <Property Name="AreaId" Type="Int32" />
+          <Property Name="GroupId" Type="Int32" />
+          <Property Name="RoleId" Type="Int32" />
+          <Property Name="Holiday" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="View_VideoSummary">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="FullName" />
+          </Key>
+          <Property Name="Id" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="VideoName" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="VideoPath" Type="String" MaxLength="550" FixedLength="false" Unicode="false" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="FullName" Type="String" MaxLength="101" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="VideoDate" Type="DateTime" Precision="0" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="VideoSize" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EntryDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityContainer Name="ReporterEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DW_Employee" EntityType="Self.DW_Employee" />
+          <EntitySet Name="ServiceNames" EntityType="Self.ServiceName" />
+          <EntitySet Name="ServicePermissions" EntityType="Self.ServicePermission" />
+          <EntitySet Name="tbl_User" EntityType="Self.tbl_User" />
+          <EntitySet Name="View_User" EntityType="Self.View_User" />
+          <EntitySet Name="View_VideoSummary" EntityType="Self.View_VideoSummary" />
+          <EntitySet Name="VideoManagers" EntityType="ReporterModel.VideoManager" />
+          <EntitySet Name="VideoSummaries" EntityType="ReporterModel.VideoSummary" />
+          <AssociationSet Name="FK_VideoManager_VideoManager" Association="ReporterModel.FK_VideoManager_VideoManager">
+            <End Role="VideoSummary" EntitySet="VideoSummaries" />
+            <End Role="VideoManager" EntitySet="VideoManagers" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="VideoManager">
+          <Key>
+            <PropertyRef Name="VideoManagerId" />
+          </Key>
+          <Property Name="VideoManagerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="VideoSummaryId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="TakenByUserId" Type="Int32" />
+          <Property Name="TakenByTime" Type="DateTime" Precision="3" />
+          <Property Name="CompletedTime" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LocalCompletedFilePath" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="YoutubeId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="VideoSummary" Relationship="ReporterModel.FK_VideoManager_VideoManager" FromRole="VideoManager" ToRole="VideoSummary" />
+        </EntityType>
+        <EntityType Name="VideoSummary">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="VideoName" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="VideoPath" Type="String" MaxLength="550" FixedLength="false" Unicode="false" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="CenterCode" Type="Int32" />
+          <Property Name="VideoDate" Type="DateTime" Precision="0" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="VideoSize" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EntryDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="GoogleDriveId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GoogleStreamingLink" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="VideoManagers" Relationship="ReporterModel.FK_VideoManager_VideoManager" FromRole="VideoSummary" ToRole="VideoManager" />
+        </EntityType>
+        <Association Name="FK_VideoManager_VideoManager">
+          <End Type="ReporterModel.VideoSummary" Role="VideoSummary" Multiplicity="1" />
+          <End Type="ReporterModel.VideoManager" Role="VideoManager" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VideoSummary">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VideoManager">
+              <PropertyRef Name="VideoSummaryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ReporterModelStoreContainer" CdmEntityContainer="ReporterEntities">
+          <EntitySetMapping Name="DW_Employee">
+            <EntityTypeMapping TypeName="ReporterModel.DW_Employee">
+              <MappingFragment StoreEntitySet="DW_Employee">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="employeecode" ColumnName="employeecode" />
+                <ScalarProperty Name="displayname" ColumnName="displayname" />
+                <ScalarProperty Name="deskcode" ColumnName="deskcode" />
+                <ScalarProperty Name="publicationcode" ColumnName="publicationcode" />
+                <ScalarProperty Name="ldapint" ColumnName="ldapint" />
+                <ScalarProperty Name="groupcode" ColumnName="groupcode" />
+                <ScalarProperty Name="reportingdesk" ColumnName="reportingdesk" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ServiceNames">
+            <EntityTypeMapping TypeName="ReporterModel.ServiceName">
+              <MappingFragment StoreEntitySet="ServiceName">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Service" ColumnName="Service" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ServicePermissions">
+            <EntityTypeMapping TypeName="ReporterModel.ServicePermission">
+              <MappingFragment StoreEntitySet="ServicePermission">
+                <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
+                <ScalarProperty Name="ServiceName" ColumnName="ServiceName" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_User">
+            <EntityTypeMapping TypeName="ReporterModel.tbl_User">
+              <MappingFragment StoreEntitySet="tbl_User">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserCode" ColumnName="UserCode" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="MobileNo" ColumnName="MobileNo" />
+                <ScalarProperty Name="DesignationId" ColumnName="DesignationId" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="EntryBy" ColumnName="EntryBy" />
+                <ScalarProperty Name="EntryDate" ColumnName="EntryDate" />
+                <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="IsReporter" ColumnName="IsReporter" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="Holiday" ColumnName="Holiday" />
+                <ScalarProperty Name="NewswrapCode" ColumnName="NewswrapCode" />
+                <ScalarProperty Name="NewswrapDesk" ColumnName="NewswrapDesk" />
+                <ScalarProperty Name="NewswrapCenter" ColumnName="NewswrapCenter" />
+                <ScalarProperty Name="AreaId" ColumnName="AreaId" />
+                <ScalarProperty Name="BishalGroup" ColumnName="BishalGroup" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="DistrictNameId" ColumnName="DistrictNameId" />
+                <ScalarProperty Name="UpazillaNameId" ColumnName="UpazillaNameId" />
+                <ScalarProperty Name="IsMohanogor" ColumnName="IsMohanogor" />
+                <ScalarProperty Name="ReportGroup" ColumnName="ReportGroup" />
+                <ScalarProperty Name="ReportOrder" ColumnName="ReportOrder" />
+                <ScalarProperty Name="ApprovePermission" ColumnName="ApprovePermission" />
+                <ScalarProperty Name="SectionID" ColumnName="SectionID" />
+                <ScalarProperty Name="IsPhotoHead" ColumnName="IsPhotoHead" />
+                <ScalarProperty Name="LDAPUser" ColumnName="LDAPUser" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="View_User">
+            <EntityTypeMapping TypeName="ReporterModel.View_User">
+              <MappingFragment StoreEntitySet="View_User">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserCode" ColumnName="UserCode" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="DesignationId" ColumnName="DesignationId" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="IsReporter" ColumnName="IsReporter" />
+                <ScalarProperty Name="MobileNo" ColumnName="MobileNo" />
+                <ScalarProperty Name="NewswrapCode" ColumnName="NewswrapCode" />
+                <ScalarProperty Name="NewswrapDesk" ColumnName="NewswrapDesk" />
+                <ScalarProperty Name="NewswrapCenter" ColumnName="NewswrapCenter" />
+                <ScalarProperty Name="FullDes" ColumnName="FullDes" />
+                <ScalarProperty Name="AreaId" ColumnName="AreaId" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Holiday" ColumnName="Holiday" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="View_VideoSummary">
+            <EntityTypeMapping TypeName="ReporterModel.View_VideoSummary">
+              <MappingFragment StoreEntitySet="View_VideoSummary">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="VideoName" ColumnName="VideoName" />
+                <ScalarProperty Name="VideoPath" ColumnName="VideoPath" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="VideoDate" ColumnName="VideoDate" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="VideoSize" ColumnName="VideoSize" />
+                <ScalarProperty Name="EntryDate" ColumnName="EntryDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VideoManagers">
+            <EntityTypeMapping TypeName="ReporterModel.VideoManager">
+              <MappingFragment StoreEntitySet="VideoManager">
+                <ScalarProperty Name="YoutubeId" ColumnName="YoutubeId" />
+                <ScalarProperty Name="LocalCompletedFilePath" ColumnName="LocalCompletedFilePath" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CompletedTime" ColumnName="CompletedTime" />
+                <ScalarProperty Name="TakenByTime" ColumnName="TakenByTime" />
+                <ScalarProperty Name="TakenByUserId" ColumnName="TakenByUserId" />
+                <ScalarProperty Name="VideoSummaryId" ColumnName="VideoSummaryId" />
+                <ScalarProperty Name="VideoManagerId" ColumnName="VideoManagerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VideoSummaries">
+            <EntityTypeMapping TypeName="ReporterModel.VideoSummary">
+              <MappingFragment StoreEntitySet="VideoSummary">
+                <ScalarProperty Name="GoogleStreamingLink" ColumnName="GoogleStreamingLink" />
+                <ScalarProperty Name="GoogleDriveId" ColumnName="GoogleDriveId" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="EntryDate" ColumnName="EntryDate" />
+                <ScalarProperty Name="VideoSize" ColumnName="VideoSize" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="VideoDate" ColumnName="VideoDate" />
+                <ScalarProperty Name="CenterCode" ColumnName="CenterCode" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="VideoPath" ColumnName="VideoPath" />
+                <ScalarProperty Name="VideoName" ColumnName="VideoName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

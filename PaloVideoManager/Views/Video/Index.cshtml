@@ -1,0 +1,274 @@
+﻿
+@model IEnumerable<PaloVideoManager.Models.ViewModel.VideoListViewModel>
+
+@{
+    ViewBag.Title = "Upload Video";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    input[type="file"]:hover {
+        cursor: pointer;
+    }
+
+    #contentTable {
+        counter-reset: rowNumber-1;
+    }
+
+        #contentTable tr {
+            counter-increment: rowNumber;
+        }
+
+            #contentTable tr td:first-child::before {
+                content: counter(rowNumber);
+                min-width: 1em;
+                margin-right: 0.5em;
+            }
+</style>
+
+<div class="container" id="bodyContainer">
+    <h4 class="display-6">Upload Video</h4>
+    <hr />
+    <div style="text-align:center">
+        <div class="alert alert-success" id="successAlert" style="display:none;width:300px" role="alert">
+            Success! Video has been Uploaded.
+        </div>
+    </div>
+    <div class="row">
+        @*@using (Html.BeginForm("UploadFile", "Video", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {*@
+        <div class="alert alert-danger" id="sizeAlert" style="display:none" role="alert">
+            File size exceeds 300MB!
+        </div>
+        <div class="alert alert-danger" id="formatAlert" style="display:none" role="alert">
+            File format isn't supported! Choose a video file.
+        </div>
+
+        <form enctype="multipart/form-data" id="videoUploadForm" style="width:100%">
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="file">Description:</label>
+                    <textarea rows="3" class="form-control" name="description" id="description"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label for="file">Select Video:</label>
+                    <input type="file" class="form-control-file" name="file" id="file" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <input type="submit" class="btn btn-primary" value="Upload" id="fileSubmit" style="margin-bottom:0.8rem" />
+                    <div class="spinner-border" style="display:none" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        @*}*@
+    </div>
+    <div class="row">
+        @using (Html.BeginForm("Index", "Video", FormMethod.Post, new { @class = "form-inline", enctype = "multipart/form-data" }))
+        {
+        <div class="form-row">
+            <div class="col">
+                <input id="datepickerIndex" name=date value="" />
+            </div>
+            <div class="col">
+                <input type="submit" class="btn btn-outline-info" value="Search" />
+            </div>
+        </div>
+            
+        }
+    </div>
+    <br />
+    <div class="row">
+        @if (Model != null)
+        {
+            <table id="contentTable" class="table table-striped table-responsive" style="width:100%">
+                <thead class="table-primary">
+                    <tr>
+                        <th>
+                            No.
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.VideoName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.EntryDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.VideoSize)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Description)
+                        </th>
+                        <th>
+                            Download
+                        </th>
+                        @*<th>
+                                Delete
+                            </th>*@
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.VideoName)
+                            </td>
+                            <td>
+                                @string.Format("{0: dd/MMMM/yyyy}", Convert.ToDateTime(Html.DisplayFor(modelItem => item.EntryDate).ToString()))
+                            </td>
+                            <td>
+                                @{
+                                    long? KiloByte = Convert.ToInt32(@item.VideoSize) / 1024;
+                                    string NewSize = KiloByte + " KB";
+                                }
+                                @NewSize
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                <input type="button" class="btn btn-outline-success DownloadFile" value="Download" data-key=@item.GoogleDriveId style="align-content:center" />
+                            </td>
+                            @*<td>
+                                    @using (Html.BeginForm("DeleteFile", "Video", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                    {
+                                        <input type="hidden" name=Id value="@item.GoogleDriveId">
+                                        <input type="submit" class="btn btn-outline-danger DeleteFile" value="Delete" style="align-content:center" />
+                                    }
+
+                                </td>*@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        }
+        else
+        {
+            <p class="lead" style="text-align:center">No files found</p>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#datepickerIndex').datepicker({
+        uiLibrary: 'bootstrap4'
+    });
+
+    $(".DownloadFile").on('click', function () {
+        var fileId = $(this).attr("data-key");
+        window.location.href = '/Video/DownloadFile/' + fileId;
+    });
+    //$(document).on('click', '.DownloadFile', function () {
+    //    debugger;
+    //    var fileId = $(this).attr("data-key");
+    //    window.location.href = '/Video/DownloadFile/' + fileId;
+    //});
+    function clientFunction() {
+
+        var isValid = true;
+        $('#description').each(function () {
+            if ($.trim($(this).val()) == '') {
+                isValid = false;
+                $(this).css({
+                    "border": "1px solid red"
+                    //"background": "#FFCECE"
+                });
+            }
+            else {
+                $(this).css({
+                    "border": "",
+                    "background": ""
+                });
+            }
+        });
+        if (isValid == false) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    $("#fileSubmit").click(function () {
+        $("#formatAlert").css("display", "none");
+        $("#sizeAlert").css("display", "none");
+        if (clientFunction()) {
+            //$(".spinner-border").css("display", "block");
+            //var formData = new FormData($('form')[0]);
+            var formData = new FormData();
+            var file = document.getElementById("file").files[0];
+            const fileType = file['type'];
+            //console.log(fileType);
+            const validImageTypes = ['video/mp4', 'video/mpeg4', 'video/avi', 'video/wmv', 'video/x-ms-wmv'];
+            if (!validImageTypes.includes(fileType)) {
+                $("#formatAlert").css("display", "block");
+                return false;
+            }
+
+            if (file.size > 314572800) {
+                $("#sizeAlert").css("display", "block");
+                return false;
+            }
+
+            var caption = $("#description").val();
+            formData.append("file", file);
+            formData.append("caption", caption);
+            $(".spinner-border").css("display", "inline-block");
+            $.ajax({
+                type: "POST",
+                url: "@(Url.Action("UploadFile", "Video"))",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    $(".spinner-border").css("display", "none");
+                    $("#successAlert").css("display", "inline-block");
+                    $("#successAlert").fadeTo(4000, 500).slideUp(50, function () {
+                        $("#successAlert").slideUp(0);
+                    });
+                    setTimeout(function () {
+                        location.reload();
+                    }, 4500);
+
+                }
+            });
+        }
+        else {
+            return clientFunction();
+        }
+
+
+        //ajax = new XMLHttpRequest();
+        //ajax.open("POST", "/Video/UploadFile");
+
+        //ajax.upload.onprogress = function (e) {
+        //    $(".spinner-border").css("display", "block");
+        //}
+
+        //ajax.upload.onloadstart = function (e) {
+        //    //updating progress bar on strt of AJAX request
+        //    $(".spinner-border").css("display", "none");
+
+        //}
+        //ajax.upload.onloadend = function (e) {
+        //    //called on file upload is done.
+        //    $(".spinner-border").css("display", "none");
+
+        //}
+
+        //ajax.send(formData);
+
+    });
+</script>
+
+

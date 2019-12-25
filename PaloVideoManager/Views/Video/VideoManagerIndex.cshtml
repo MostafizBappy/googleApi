@@ -1,0 +1,411 @@
+﻿@model IEnumerable<PaloVideoManager.Models.ViewModel.VideoManagerViewModel>
+@{
+    ViewBag.Title = "Video Manager";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    input[type="file"]:hover {
+        cursor: pointer;
+    }
+
+    #btnPlayVIdeo {
+        background: none !important;
+        border: none;
+        padding: 0 !important;
+        /*optional*/
+        font-family: arial, sans-serif;
+        /*input has OS specific font-family*/
+        color: #000;
+        text-decoration: none;
+        cursor:text;
+    }
+
+    #contentTable {
+        counter-reset: rowNumber-1;
+    }
+
+        #contentTable tr {
+            counter-increment: rowNumber;
+        }
+
+            #contentTable tr td:first-child::before {
+                content: counter(rowNumber);
+                min-width: 1em;
+                margin-right: 0.5em;
+            }
+
+    .modal-footer {
+        border-top: none;
+    }
+</style>
+
+<div class="container" id="bodyContainer">
+    <h4 class="display-6">Video Manager</h4>
+    <hr />
+    <div class="row">
+        @using (Html.BeginForm("VideoManagerIndex", "Video", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="form-group">
+                <input id="datepicker" name=date width="276" value="" />
+
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-outline-info" value="Search" />
+            </div>
+
+        }
+    </div>
+    <div style="text-align:center">
+        <div class="alert alert-success" id="successAlert" style="display:none;width:300px" role="alert">
+            Success! Video has been Submitted.
+        </div>
+    </div>
+    <div class="row">
+
+        @if (Model.Count() > 0)
+        {
+            <table class="table table-hover" id="contentTable">
+                <thead class="table-primary">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>User</th>
+                        <th>Submit Date</th>
+                        <th>Size</th>
+                        <th>Description</th>
+                        <th>Taken By</th>
+                        <th>Take</th>
+                        <th>Download</th>
+                        <th>Submit</th>
+                        @*<th>Delete</th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="submit" class="btn btn-success" id="btnPlayVIdeo" value="@Html.DisplayFor(model => item.VideoSummary.VideoName)" data-toggle="modal" data-target="#videoooModal" data-whatever="@item.VideoSummary.GoogleStreamingLink"/>
+                                @*<a id="playVideo" href="#">@Html.DisplayFor(model => item.VideoSummary.VideoName)</a>*@
+                            </td>
+                            <td>@Html.DisplayFor(model => item.VideoSummary.SubmittedByUserName)</td>
+                            <td>@string.Format("{0: dd/MMM/yyyy}", Convert.ToDateTime(Html.DisplayFor(model => item.VideoSummary.EntryDate).ToString()))</td>
+                            <td>
+                                @{
+                                    long? size = Convert.ToInt64(@item.VideoSummary.VideoSize) / 1024;
+                                    string newSize = size + "KB";
+                                }
+                                @newSize
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.VideoSummary.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.TakenByName)
+                            </td>
+                            @*<td>@Html.DisplayFor(model => item.StreamingLink)</td>*@
+                            <td>
+                                <input type="hidden" name=ManagerId id="hdnManagerId" value="@item.VideoManagerId">
+                                @if (item.Status == "pending")
+                                {
+                                <input type="submit" class="btn btn-info" id="btnTake" value="Take" style="align-content:center" />
+                                }
+                                else
+                                {
+                                <input type="submit" class="btn btn-info" value="Take" style="align-content:center" disabled="disabled" />
+                                }
+
+                            </td>
+                            <td>
+                                <input type="button" class="DownloadFile btn btn-outline-primary" value="Download" data-key=@item.VideoSummary.GoogleDriveId style="align-content:center" />
+                            </td>
+                            @*<td>
+                                    @using (Html.BeginForm("DeleteFile", "Video", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                    {
+                                        <input type="hidden" name=Id value="@item.VideoSummary.GoogleDriveId">
+                                        <input type="submit" class="DeleteFile btn btn-outline-danger" value="Delete" style="align-content:center" />
+                                    }
+
+                                </td>*@
+                            <td>
+                                @if (item.Status == "inProgress")
+                                {
+                                    <input type="submit" class="btn btn-success" id="btnSubmitVIdeo" value="Submit" data-toggle="modal" data-target="#exampleModal" data-whatever="@item.VideoManagerId" />
+                                }
+                                else if (item.Status == "saved")
+                                {
+                                    <input type="submit" class="btn btn-success" id="btnSubmitVideoToYoutube" data-toggle="modal" data-target="#exampleModalForYouTube" data-whatever="@item.VideoManagerId" value="For Youtube" />
+                                }
+                                else if (item.Status == "youtubeUploaded")
+                                {
+                                    @*<input type="submit" class="btn btn-light" value="Done" disabled="disabled" />*@
+                                    <a style="width:100px;" class="btn btn-light">
+                                        <i class="fa fa-check fa-2x" style="color:mediumseagreen"></i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <input type="submit" class="btn btn-success" id="btnSubmitVIdeo" value="Submit" data-toggle="modal" data-target="#exampleModal" data-whatever="@item.VideoManagerId" disabled="disabled" />
+                                }
+
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModalForYouTube" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Submit Youtube ID</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Youtube ID:</label><br />
+                        <input type="text" class="form-control" id="youTubeLink" />
+                        <input type="hidden" name="modalHiddenField" id="modalHiddenFieldForYouTube" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSubmitFromModalYouTube">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Submit Video</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Completed File Location:</label><br />
+                        <p><small>Give the datacenter file location. <b>E.g. \\datacenter\palo\Online Section\file-name</b></small></p>
+                        <input type="text" class="form-control" id="fileLocation" />
+                        <input type="hidden" name="modalHiddenField" id="modalHiddenField" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSubmitFromModal">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Play Video</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="divVideo">
+                    <video controls>
+                        <source src="" type="video/mp4" />
+                    </video>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*<input type="button" id="example" value="click"/>*@
+
+<script type="text/javascript">
+    $(".DownloadFile").on('click', function () {
+        var fileId = $(this).attr("data-key");
+        window.location.href = '/Video/DownloadFile/' + fileId;
+    });
+
+    $('#datepicker').datepicker({
+        uiLibrary: 'bootstrap4'
+    });
+
+    //$("#example").click(function () {
+    //    $("#successAlert").css("display", "inline-block");
+    //    $("#successAlert").fadeTo(5000, 500).slideUp(50, function () {
+    //        $("#successAlert").slideUp(0);
+    //    });
+    //});
+
+    $('#exampleModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var recipient = button.data('whatever') // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this)
+        //modal.find('.modal-title').text('New message to ' + recipient)
+        modal.find('#modalHiddenField').val(recipient)
+    });
+
+    $('#exampleModalForYouTube').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var recipient = button.data('whatever') // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this)
+        //modal.find('.modal-title').text('New message to ' + recipient)
+        modal.find('#modalHiddenFieldForYouTube').val(recipient)
+    });
+
+    $('#videoModal').on('show.bs.modal', function (event) {
+        debugger;
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var recipient = button.data('whatever')
+        console.log(recipient);// Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this)
+        modal.find('#divVideo video source').attr('src', recipient);
+        modal.find("#divVideo video")[0].load();
+
+    });
+
+    $("#btnSubmitFromModal").click(function () {
+        if (clientFunction()) {
+            var location = $("#fileLocation").val();
+            var videoId = $("#modalHiddenField").val();
+            var formData = new FormData();
+            formData.append("location", location);
+            formData.append("videoId", videoId);
+            $.ajax({
+                type: "POST",
+                url: "@(Url.Action("SubmitVideo", "Video"))",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    $("#exampleModal").modal('hide');
+                    
+                    $("#successAlert").css("display", "inline-block");
+                    $("#successAlert").fadeTo(4000, 500).slideUp(50, function () {
+                        $("#successAlert").slideUp(0);
+                    });
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 4000);
+                }
+            });
+        }
+        else {
+            return clientFunction();
+        }
+    });
+
+    $("#btnSubmitFromModalYouTube").click(function () {
+        if (clientFunctionForYouTube()) {
+            var youId = $("#youTubeLink").val();
+            var videoId = $("#modalHiddenFieldForYouTube").val();
+            var formData = new FormData();
+            formData.append("youTubeId", youId);
+            formData.append("videoId", videoId);
+            $.ajax({
+                type: "POST",
+                url: "@(Url.Action("SubmitVideoForYoutube", "Video"))",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    $("#exampleModalForYouTube").modal('hide');
+                    
+                    $("#successAlert").css("display", "inline-block");
+                    $("#successAlert").fadeTo(4000, 500).slideUp(50, function () {
+                        $("#successAlert").slideUp(0);
+                    });
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 4000);
+                }
+            });
+        }
+        else {
+            return clientFunction();
+        }
+    });
+
+    function clientFunction() {
+        isValid = true;
+        $("#fileLocation").each(function () {
+            if ($.trim($(this).val()) == '') {
+                isValid = false;
+                $(this).css({
+                    'border': '1px solid red'
+                });
+            }
+            else {
+                $(this).css({
+                    'border': ''
+                });
+            }
+        });
+        return isValid;
+    }
+
+    function clientFunctionForYouTube() {
+        isValid = true;
+        $("#youTubeLink").each(function () {
+            if ($.trim($(this).val()) == '') {
+                isValid = false;
+                $(this).css({
+                    'border': '1px solid red'
+                });
+            }
+            else {
+                $(this).css({
+                    'border': ''
+                });
+            }
+        });
+        return isValid;
+    }
+
+    $("#btnTake").click(function () {
+        var id = $(this).closest('tr').find('#hdnManagerId').val();
+        console.log(id);
+        var formData = new FormData();
+        formData.append("managerId", id);
+        $.ajax({
+            type: "POST",
+            url: "@(Url.Action("SelfAssign", "Video"))",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                $("#successAlert").css("display", "inline-block");
+                $("#successAlert").fadeTo(4000, 500).slideUp(50, function () {
+                    $("#successAlert").slideUp(0);
+                });
+                setTimeout(function () {
+                    location.reload();
+                }, 4500);
+            }
+        });
+    });
+</script>
+
